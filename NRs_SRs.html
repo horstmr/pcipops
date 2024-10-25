@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gráfico Sunburst de Populações por Superintendências e Núcleos</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .chart {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        text {
+            font-size: 10px;
+            pointer-events: none; /* Avoid text blocking interactions */
+        }
+    </style>
+</head>
+<body>
+    <h1>Gráfico Sunburst de Populações por Superintendências e Núcleos</h1>
+    <div class="chart">
+        <svg id="chart"></svg>
+    </div>
+
+    <script>
+        // Integrate the JSON data directly into the HTML
+        const data = {
+            "name": "Todas as SRs",
+            "children": [
+              {
+                "name": "SR Balneário Camboriú",
+                "children": [
+                  {
+                    "name": "NR Balneário Camboriú",
+                    "children": [
+                      {
+                        "name": "Balneário Camboriú",
+                        "value": 139155
+                      },
+                      {
+                        "name": "Barra Velha",
+                        "value": 45369
+                      },
+                      {
+                        "name": "Bombinhas",
+                        "value": 25058
+                      },
+                      {
+                        "name": "Camboriú",
+                        "value": 103074
+                      },
+                      {
+                        "name": "Canelinha",
+                        "value": 12821
+                      },
+                      {
+                        "name": "Itajaí",
+                        "value": 264054
+                      },
+                      {
+                        "name": "Itapema",
+                        "value": 75940
+                      },
+                      {
+                        "name": "Luiz Alves",
+                        "value": 11684
+                      },
+                      {
+                        "name": "Navegantes",
+                        "value": 86401
+                      },
+                      {
+                        "name": "Penha",
+                        "value": 33663
+                      },
+                      {
+                        "name": "Balneário Piçarras",
+                        "value": 27127
+                      },
+                      {
+                        "name": "Porto Belo",
+                        "value": 27688
+                      },
+                      {
+                        "name": "São João do Itaperiú",
+                        "value": 4463
+                      },
+                      {
+                        "name": "Tijucas",
+                        "value": 51592
+                      }
+                    ]
+                  },
+                  {
+                    "name": "NR Brusque",
+                    "children": [
+                      {
+                        "name": "Botuverá",
+                        "value": 5363
+                      },
+                      {
+                        "name": "Brusque",
+                        "value": 141385
+                      },
+                      {
+                        "name": "Guabiruba",
+                        "value": 24543
+                      },
+                      {
+                        "name": "Major Gercino",
+                        "value": 3214
+                      },
+                      {
+                        "name": "Nova Trento",
+                        "value": 13727
+                      },
+                      {
+                        "name": "São João Batista",
+                        "value": 32687
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "SR Blumenau",
+                "children": [
+                  {
+                    "name": "NR Blumenau",
+                    "children": [
+                      {
+                        "name": "Apiúna",
+                        "value": 9811
+                      },
+                      {
+                        "name": "Ascurra",
+                        "value": 8319
+                      },
+                      {
+                        "name": "Benedito Novo",
+                        "value": 10520
+                      },
+                      {
+                        "name": "Blumenau",
+                        "value": 361261
+                      },
+                      {
+                        "name": "Doutor Pedrinho",
+                        "value": 3637
+                      },
+                      {
+                        "name": "Gaspar",
+                        "value": 72570
+                      },
+                      {
+                        "name": "Ilhota",
+                        "value": 17046
+                      },
+                      {
+                        "name": "Indaial",
+                        "value": 71549
+                      },
+                      {
+                        "name": "Pomerode",
+                        "value": 34289
+                      },
+                      {
+                        "name": "Rio dos Cedros",
+                        "value": 10865
+                      },
+                      {
+                        "name": "Rodeio",
+                        "value": 12757
+                      },
+                      {
+                        "name": "Timbó",
+                        "value": 46099
+                      }
+                    ]
+                  },
+                  {
+                    "name": "NR Rio do Sul",
+                    "children": [
+                      {
+                        "name": "Agrolândia",
+                        "value": 10990
+                      },
+                      {
+                        "name": "Agronômica",
+                        "value": 6055
+                      },
+                      {
+                        "name": "Atalanta",
+                        "value": 3227
+                      },
+                      {
+                        "name": "Aurora",
+                        "value": 6780
+                      },
+                      {
+                        "name": "Braço do Trombudo",
+                        "value": 4026
+                      },
+                      {
+                        "name": "Chapadão do Lageado",
+                        "value": 2950
+                      },
+                      {
+                        "name": "Dona Emma",
+                        "value": 4221
+                      },
+                      {
+                        "name": "Ibirama",
+                        "value": 19862
+                      },
+                      {
+                        "name": "Imbuia",
+                        "value": 5982
+                      },
+                      {
+                        "name": "Ituporanga",
+                        "value": 26525
+                      },
+                      {
+                        "name": "José Boiteux",
+                        "value": 5985
+                      },
+                      {
+                        "name": "Laurentino",
+                        "value": 7932
+                      },
+                      {
+                        "name": "Leoberto Leal",
+                        "value": 3330
+                      },
+                      {
+                        "name": "Lontras",
+                        "value": 12873
+                      },
+                      {
+                        "name": "Mirim Doce",
+                        "value": 2511
+                      },
+                      {
+                        "name": "Petrolândia",
+                        "value": 6716
+                      },
+                      {
+                        "name": "Pouso Redondo",
+                        "value": 17123
+                      },
+                      {
+                        "name": "Presidente Getúlio",
+                        "value": 20010
+                      },
+                      {
+                        "name": "Presidente Nereu",
+                        "value": 2301
+                      },
+                      {
+                        "name": "Rio do Campo",
+                        "value": 6452
+                      },
+                      {
+                        "name": "Rio do Oeste",
+                        "value": 7747
+                      },
+                      {
+                        "name": "Rio do Sul",
+                        "value": 72587
+                      },
+                      {
+                        "name": "Salete",
+                        "value": 7489
+                      },
+                      {
+                        "name": "Santa Terezinha",
+                        "value": 8066
+                      },
+                      {
+                        "name": "Taió",
+                        "value": 18310
+                      },
+                      {
+                        "name": "Trombudo Central",
+                        "value": 7274
+                      },
+                      {
+                        "name": "Vidal Ramos",
+                        "value": 6189
+                      },
+                      {
+                        "name": "Vitor Meireles",
+                        "value": 5370
+                      },
+                      {
+                        "name": "Witmarsum",
+                        "value": 4255
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "SR Caçador",
+                "children": [
+                  {
+                    "name": "NR Campos Novos",
+                    "children": [
+                      {
+                        "name": "Abdon Batista",
+                        "value": 2598
+                      },
+                      {
+                        "name": "Brunópolis",
+                        "value": 2489
+                      },
+                      {
+                        "name": "Campos Novos",
+                        "value": 36932
+                      },
+                      {
+                        "name": "Celso Ramos",
+                        "value": 2805
+                      },
+                      {
+                        "name": "Vargem",
+                        "value": 2627
+                      },
+                      {
+                        "name": "Zortéa",
+                        "value": 3930
+                      }
+                    ]
+                  },
+                  {
+                    "name": "NR Caçador",
+                    "children": [
+                      {
+                        "name": "Caçador",
+                        "value": 73720
+                      },
+                      {
+                        "name": "Calmon",
+                        "value": 3443
+                      },
+                      {
+                        "name": "Lebon Régis",
+                        "value": 11472
+                      },
+                      {
+                        "name": "Macieira",
+                        "value": 1778
+                      },
+                      {
+                        "name": "Rio das Antas",
+                        "value": 6253
+                      },
+                      {
+                        "name": "Santa Cecília",
+                        "value": 15546
+                      },
+                      {
+                        "name": "Timbó Grande",
+                        "value": 7342
+                      }
+                    ]
+                  },
+                  {
+                    "name": "NR Joaçaba",
+                    "children": [
+                      {
+                        "name": "Água Doce",
+                        "value": 6508
+                      },
+                      {
+                        "name": "Capinzal",
+                        "value": 23314
+                      },
+                      {
+                        "name": "Catanduvas",
+                        "value": 10566
+                      },
+                      {
+                        "name": "Erval Velho",
+                        "value": 4885
+                      },
+                      {
+                        "name": "Herval d'Oeste",
+                        "value": 21724
+                      },
+                      {
+                        "name": "Ibicaré",
+                        "value": 3269
+                      },
+                      {
+                        "name": "Ipira",
+                        "value": 4578
+                      },
+                      {
+                        "name": "Jaborá",
+                        "value": 4310
+                      },
+                      {
+                        "name": "Joaçaba",
+                        "value": 30146
+                      },
+                      {
+                        "name": "Lacerdópolis",
+                        "value": 2248
+                      },
+                      {
+                        "name": "Luzerna",
+                        "value": 5794
+                      },
+                      {
+                        "name": "Ouro",
+                        "value": 7032
+                      },
+                      {
+                        "name": "Piratuba",
+                        "value": 5769
+                      },
+                      {
+                        "name": "Treze Tílias",
+                        "value": 8787
+                      },
+                      {
+                        "name": "Vargem Bonita",
+                        "value": 4576
+                      }
+                    ]
+                  },
+                  {
+                    "name": "NR Porto União",
+                    "children": [
+                      {
+                        "name": "Irineópolis",
+                        "value": 10285
+                      },
+                      {
+                        "name": "Matos Costa",
+                        "value": 2761
+                      },
+                      {
+                        "name": "Porto União",
+                        "value": 32970
+                      }
+                    ]
+                  },
+                  {
+                    "name": "NR Videira",
+                    "children": [
+                      {
+                        "name": "Arroio Trinta",
+                        "value": 3556
+                      },
+                      {
+                        "name": "Fraiburgo",
+                        "value": 33481
+                      },
+                      {
+                        "name": "Ibiam",
+                        "value": 2008
+                      },
+                      {
+                        "name": "Iomerê",
+                        "value": 2877
+                      },
+                      {
+                        "name": "Monte Carlo",
+                        "value": 9117
+                      },
+                      {
+                        "name": "Pinheiro Preto",
+                        "value": 3473
+                      },
+                      {
+                        "name": "Salto Veloso",
+                        "value": 4390
+                      },
+                      {
+                        "name": "Tangará",
+                        "value": 8143
+                      },
+                      {
+                        "name": "Videira",
+                        "value": 55466
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "SR Chapecó",
+                "children": [
+                  {
+                    "name": "NR Chapecó",
+                    "children": [
+                      {
+                        "name": "Águas de Chapecó",
+                        "value": 6036
+                      },
+                      {
+                        "name": "Águas Frias",
+                        "value": 2839
+                      },
+                      {
+                        "name": "Bom Jesus do Oeste",
+                        "value": 2187
+                      },
+                      {
+                        "name": "Caibi",
+                        "value": 6304
+                      },
+                      {
+                        "name": "Caxambu do Sul",
+                        "value": 4614
+                      },
+                      {
+                        "name": "Chapecó",
+                        "value": 254785
+                      },
+                      {
+                        "name": "Cordilheira Alta",
+                        "value": 4781
+                      },
+                      {
+                        "name": "Coronel Freitas",
+                        "value": 10388
+                      },
+                      {
+                        "name": "Cunhataí",
+                        "value": 1968
+                      },
+                      {
+                        "name": "Guatambú",
+                        "value": 8425
+                      },
+                      {
+                        "name": "Jardinópolis",
+                        "value": 1776
+                      },
+                      {
+                        "name": "Modelo",
+                        "value": 4080
+                      },
+                      {
+                        "name": "Nova Erechim",
+                        "value": 5155
+                      },
+                      {
+                        "name": "Nova Itaberaba",
+                        "value": 4536
+                      },
+                      {
+                        "name": "Palmitos",
+                        "value": 15626
+                      },
+                      {
+                        "name": "Pinhalzinho",
+                        "value": 21972
+                      },
+                      {
+                        "name": "Planalto Alegre",
+                        "value": 2946
+                      },
+                      {
+                        "name": "São Carlos",
+                        "value": 10282
+                      },
+                      {
+                        "name": "Saudades",
+                        "value": 10265
+                      },
+                      {
+                        "name": "Serra Alta",
+                        "value": 3303
+                      },
+                      {
+                        "name": "Sul Brasil",
+                        "value": 2832
+                      },
+                      {
+                        "name": "União do Oeste",
+                        "value": 2774
+                      }
+                    ]
+                  },
+                  {
+                    "name": "NR Concórdia",
+                    "children": [
+                      {
+                        "name": "Alto Bela Vista",
+                        "value": 1856
+                      },
+                      {
+                        "name": "Arabutã",
+                        "value": 4378
+                      },
+                      {
+                        "name": "Arvoredo",
+                        "value": 2510
+                      },
+                      {
+                        "name": "Concórdia",
+                        "value": 81646
+                      },
+                      {
+                        "name": "Ipumirim",
+                        "value": 7816
+                      },
+                      {
+                        "name": "Irani",
+                        "value": 10195
+                      },
+                      {
+                        "name": "Itá",
+                        "value": 7067
+                      },
+                      {
+                        "name": "Lindóia do Sul",
+                        "value": 4549
+                      },
+                      {
+                        "name": "Paial",
+                        "value": 1927
+                      },
+                      {
+                        "name": "Peritiba",
+                        "value": 2992
+                      },
+                      {
+                        "name": "Presidente Castello Branco",
+                        "value": 1689
+                      },
+                      {
+                        "name": "Seara",
+                        "value": 18620
+                      },
+                      {
+                        "name": "Xavantina",
+                        "value": 3653
+                      }
+                    ]
+                  },
+                  {
+                    "name": "NR São Lourenço do Oeste",
+                    "children": [
+                      {
+                        "name": "Campo Erê",
+                        "value": 9623
+                      },
+                      {
+                        "name": "Coronel Martins",
+                        "value": 2065
+                      },
+                      {
+                        "name": "Entre Rios",
+                        "value": 3402
+                      },
+                      {
+                        "name": "Formosa do Sul",
+                        "value": 2682
+                      },
+                      {
+                        "name": "Galvão",
+                        "value": 3210
+                      },
+                      {
+                        "name": "Ipuaçu",
+                        "value": 7730
+                      },
+                      {
+                        "name": "Irati",
+                        "value": 2069
+                      },
+                      {
+                        "name": "Jupiá",
+                        "value": 2555
+                      },
+                      {
+                        "name": "Novo Horizonte",
+                        "value": 2643
+                      },
+                      {
+                        "name": "Quilombo",
+                        "value": 11022
+                      },
+                      {
+                        "name": "Saltinho",
+                        "value": 3632
+                      },
+                      {
+                        "name": "Santa Terezinha do Progresso",
+                        "value": 2576
+                      },
+                      {
+                        "name": "Santiago do Sul",
+                        "value": 1651
+                      },
+                      {
+                        "name": "São Bernardino",
+                        "value": 2684
+                      },
+                      {
+                        "name": "São Domingos",
+                        "value": 9226
+                      },
+                      {
+                        "name": "São Lourenço do Oeste",
+                        "value": 24791
+                      }
+                    ]
+                  },
+                  {
+                    "name": "NR São Miguel do Oeste",
+                    "children": [
+                      {
+                        "name": "Anchieta",
+                        "value": 5943
+                      },
+                      {
+                        "name": "Bandeirante",
+                        "value": 3144
+                      },
+                      {
+                        "name": "Barra Bonita",
+                        "value": 1668
+                      },
+                      {
+                        "name": "Belmonte",
+                        "value": 2658
+                      },
+                      {
+                        "name": "Cunha Porã",
+                        "value": 10953
+                      },
+                      {
+                        "name": "Descanso",
+                        "value": 8530
+                      },
+                      {
+                        "name": "Dionísio Cerqueira",
+                        "value": 15008
+                      },
+                      {
+                        "name": "Flor do Sertão",
+                        "value": 1783
+                      },
+                      {
+                        "name": "Guaraciaba",
+                        "value": 10796
+                      },
+                      {
+                        "name": "Guarujá do Sul",
+                        "value": 4829
+                      },
+                      {
+                        "name": "Iporã do Oeste",
+                        "value": 9335
+                      },
+                      {
+                        "name": "Iraceminha",
+                        "value": 3986
+                      },
+                      {
+                        "name": "Itapiranga",
+                        "value": 16638
+                      },
+                      {
+                        "name": "Maravilha",
+                        "value": 28251
+                      },
+                      {
+                        "name": "Mondaí",
+                        "value": 10066
+                      },
+                      {
+                        "name": "Palma Sola",
+                        "value": 7605
+                      },
+                      {
+                        "name": "Paraíso",
+                        "value": 4267
+                      },
+                      {
+                        "name": "Princesa",
+                        "value": 2964
+                      },
+                      {
+                        "name": "Riqueza",
+                        "value": 4768
+                      },
+                      {
+                        "name": "Romelândia",
+                        "value": 4823
+                      },
+                      {
+                        "name": "Santa Helena",
+                        "value": 2425
+                      },
+                      {
+                        "name": "São João do Oeste",
+                        "value": 6295
+                      },
+                      {
+                        "name": "São José do Cedro",
+                        "value": 14167
+                      },
+                      {
+                        "name": "São Miguel da Boa Vista",
+                        "value": 1781
+                      },
+                      {
+                        "name": "São Miguel do Oeste",
+                        "value": 44330
+                      },
+                      {
+                        "name": "Tigrinhos",
+                        "value": 2329
+                      },
+                      {
+                        "name": "Tunápolis",
+                        "value": 4916
+                      }
+                    ]
+                  },
+                  {
+                    "name": "NR Xanxerê",
+                    "children": [
+                      {
+                        "name": "Abelardo Luz",
+                        "value": 17392
+                      },
+                      {
+                        "name": "Bom Jesus",
+                        "value": 2777
+                      },
+                      {
+                        "name": "Faxinal dos Guedes",
+                        "value": 11192
+                      },
+                      {
+                        "name": "Lajeado Grande",
+                        "value": 1702
+                      },
+                      {
+                        "name": "Marema",
+                        "value": 2184
+                      },
+                      {
+                        "name": "Ouro Verde",
+                        "value": 2181
+                      },
+                      {
+                        "name": "Passos Maia",
+                        "value": 4034
+                      },
+                      {
+                        "name": "Ponte Serrada",
+                        "value": 10649
+                      },
+                      {
+                        "name": "Vargeão",
+                        "value": 3634
+                      },
+                      {
+                        "name": "Xanxerê",
+                        "value": 51607
+                      },
+                      {
+                        "name": "Xaxim",
+                        "value": 31918
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "SR Criciúma",
+                "children": [
+                  {
+                    "name": "NR Araranguá",
+                    "children": [
+                      {
+                        "name": "Araranguá",
+                        "value": 71922
+                      },
+                      {
+                        "name": "Balneário Arroio do Silva",
+                        "value": 15820
+                      },
+                      {
+                        "name": "Ermo",
+                        "value": 2269
+                      },
+                      {
+                        "name": "Maracajá",
+                        "value": 7815
+                      },
+                      {
+                        "name": "Meleiro",
+                        "value": 7006
+                      },
+                      {
+                        "name": "Morro Grande",
+                        "value": 3010
+                      },
+                      {
+                        "name": "Timbé do Sul",
+                        "value": 5386
+                      },
+                      {
+                        "name": "Turvo",
+                        "value": 13043
+                      }
+                    ]
+                  },
+                  {
+                    "name": "NR Criciúma",
+                    "children": [
+                      {
+                        "name": "Cocal do Sul",
+                        "value": 17240
+                      },
+                      {
+                        "name": "Criciúma",
+                        "value": 214493
+                      },
+                      {
+                        "name": "Forquilhinha",
+                        "value": 31431
+                      },
+                      {
+                        "name": "Içara",
+                        "value": 59035
+                      },
+                      {
+                        "name": "Lauro Müller",
+                        "value": 14381
+                      },
+                      {
+                        "name": "Morro da Fumaça",
+                        "value": 18537
+                      },
+                      {
+                        "name": "Nova Veneza",
+                        "value": 13664
+                      },
+                      {
+                        "name": "Orleans",
+                        "value": 23661
+                      },
+                      {
+                        "name": "Siderópolis",
+                        "value": 13714
+                      },
+                      {
+                        "name": "Treviso",
+                        "value": 3782
+                      },
+                      {
+                        "name": "Urussanga",
+                        "value": 20919
+                      },
+                      {
+                        "name": "Balneário Rincão",
+                        "value": 12760
+                      }
+                    ]
+                  },
+                  {
+                    "name": "NR Laguna",
+                    "children": [
+                      {
+                        "name": "Garopaba",
+                        "value": 29959
+                      },
+                      {
+                        "name": "Imaruí",
+                        "value": 11881
+                      },
+                      {
+                        "name": "Imbituba",
+                        "value": 52579
+                      },
+                      {
+                        "name": "Laguna",
+                        "value": 42785
+                      },
+                      {
+                        "name": "Paulo Lopes",
+                        "value": 9063
+                      }
+                    ]
+                  },
+                  {
+                    "name": "NR Sombrio",
+                    "children": [
+                      {
+                        "name": "Balneário Gaivota",
+                        "value": 15669
+                      },
+                      {
+                        "name": "Jacinto Machado",
+                        "value": 10624
+                      },
+                      {
+                        "name": "Passo de Torres",
+                        "value": 12897
+                      },
+                      {
+                        "name": "Praia Grande",
+                        "value": 8270
+                      },
+                      {
+                        "name": "Santa Rosa do Sul",
+                        "value": 9792
+                      },
+                      {
+                        "name": "São João do Sul",
+                        "value": 8668
+                      },
+                      {
+                        "name": "Sombrio",
+                        "value": 29991
+                      }
+                    ]
+                  },
+                  {
+                    "name": "NR Tubarão",
+                    "children": [
+                      {
+                        "name": "Armazém",
+                        "value": 8834
+                      },
+                      {
+                        "name": "Braço do Norte",
+                        "value": 33773
+                      },
+                      {
+                        "name": "Capivari de Baixo",
+                        "value": 23975
+                      },
+                      {
+                        "name": "Grão-Pará",
+                        "value": 6277
+                      },
+                      {
+                        "name": "Gravatal",
+                        "value": 12435
+                      },
+                      {
+                        "name": "Jaguaruna",
+                        "value": 20375
+                      },
+                      {
+                        "name": "Pedras Grandes",
+                        "value": 4245
+                      },
+                      {
+                        "name": "Rio Fortuna",
+                        "value": 4847
+                      },
+                      {
+                        "name": "Sangão",
+                        "value": 12882
+                      },
+                      {
+                        "name": "Santa Rosa de Lima",
+                        "value": 2088
+                      },
+                      {
+                        "name": "São Ludgero",
+                        "value": 13509
+                      },
+                      {
+                        "name": "São Martinho",
+                        "value": 3405
+                      },
+                      {
+                        "name": "Treze de Maio",
+                        "value": 7362
+                      },
+                      {
+                        "name": "Tubarão",
+                        "value": 110088
+                      },
+                      {
+                        "name": "Pescaria Brava",
+                        "value": 9761
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "SR Florianópolis",
+                "children": [
+                  {
+                    "name": "NR Florianópolis",
+                    "children": [
+                      {
+                        "name": "Florianópolis",
+                        "value": 537211
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "SR Joinville",
+                "children": [
+                  {
+                    "name": "NR Canoinhas",
+                    "children": [
+                      {
+                        "name": "Bela Vista do Toldo",
+                        "value": 5872
+                      },
+                      {
+                        "name": "Canoinhas",
+                        "value": 55016
+                      },
+                      {
+                        "name": "Major Vieira",
+                        "value": 7425
+                      },
+                      {
+                        "name": "Três Barras",
+                        "value": 19746
+                      }
+                    ]
+                  },
+                  {
+                    "name": "NR Jaraguá do Sul",
+                    "children": [
+                      {
+                        "name": "Corupá",
+                        "value": 15267
+                      },
+                      {
+                        "name": "Guaramirim",
+                        "value": 46711
+                      },
+                      {
+                        "name": "Jaraguá do Sul",
+                        "value": 182660
+                      },
+                      {
+                        "name": "Massaranduba",
+                        "value": 17162
+                      },
+                      {
+                        "name": "Schroeder",
+                        "value": 20061
+                      }
+                    ]
+                  },
+                  {
+                    "name": "NR Joinville",
+                    "children": [
+                      {
+                        "name": "Araquari",
+                        "value": 45283
+                      },
+                      {
+                        "name": "Balneário Barra do Sul",
+                        "value": 14912
+                      },
+                      {
+                        "name": "Garuva",
+                        "value": 18545
+                      },
+                      {
+                        "name": "Itapoá",
+                        "value": 30750
+                      },
+                      {
+                        "name": "Joinville",
+                        "value": 616317
+                      },
+                      {
+                        "name": "São Francisco do Sul",
+                        "value": 52674
+                      }
+                    ]
+                  },
+                  {
+                    "name": "NR Mafra",
+                    "children": [
+                      {
+                        "name": "Itaiópolis",
+                        "value": 22051
+                      },
+                      {
+                        "name": "Mafra",
+                        "value": 55286
+                      },
+                      {
+                        "name": "Monte Castelo",
+                        "value": 7736
+                      },
+                      {
+                        "name": "Papanduva",
+                        "value": 19150
+                      }
+                    ]
+                  },
+                  {
+                    "name": "NR São Bento do Sul",
+                    "children": [
+                      {
+                        "name": "Campo Alegre",
+                        "value": 12501
+                      },
+                      {
+                        "name": "Rio Negrinho",
+                        "value": 39261
+                      },
+                      {
+                        "name": "São Bento do Sul",
+                        "value": 83277
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "SR Lages",
+                "children": [
+                  {
+                    "name": "NR Curitibanos",
+                    "children": [
+                      {
+                        "name": "Curitibanos",
+                        "value": 40045
+                      },
+                      {
+                        "name": "Frei Rogério",
+                        "value": 2411
+                      },
+                      {
+                        "name": "Ponte Alta do Norte",
+                        "value": 3210
+                      },
+                      {
+                        "name": "São Cristóvão do Sul",
+                        "value": 6084
+                      }
+                    ]
+                  },
+                  {
+                    "name": "NR Lages",
+                    "children": [
+                      {
+                        "name": "Alfredo Wagner",
+                        "value": 10481
+                      },
+                      {
+                        "name": "Anita Garibaldi",
+                        "value": 8285
+                      },
+                      {
+                        "name": "Bocaina do Sul",
+                        "value": 3515
+                      },
+                      {
+                        "name": "Bom Retiro",
+                        "value": 8418
+                      },
+                      {
+                        "name": "Capão Alto",
+                        "value": 2625
+                      },
+                      {
+                        "name": "Campo Belo do Sul",
+                        "value": 7257
+                      },
+                      {
+                        "name": "Cerro Negro",
+                        "value": 3317
+                      },
+                      {
+                        "name": "Correia Pinto",
+                        "value": 15727
+                      },
+                      {
+                        "name": "Lages",
+                        "value": 164981
+                      },
+                      {
+                        "name": "Otacílio Costa",
+                        "value": 17312
+                      },
+                      {
+                        "name": "Painel",
+                        "value": 2215
+                      },
+                      {
+                        "name": "Palmeira",
+                        "value": 2561
+                      },
+                      {
+                        "name": "Ponte Alta",
+                        "value": 4437
+                      },
+                      {
+                        "name": "São José do Cerrito",
+                        "value": 8708
+                      }
+                    ]
+                  },
+                  {
+                    "name": "NR São Joaquim,",
+                    "children": [
+                      {
+                        "name": "Bom Jardim da Serra",
+                        "value": 4026
+                      },
+                      {
+                        "name": "Rio Rufino",
+                        "value": 2397
+                      },
+                      {
+                        "name": "São Joaquim",
+                        "value": 25939
+                      },
+                      {
+                        "name": "Urubici",
+                        "value": 10834
+                      },
+                      {
+                        "name": "Urupema",
+                        "value": 2656
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "SR Palhoça",
+                "children": [
+                  {
+                    "name": "NR Palhoça",
+                    "children": [
+                      {
+                        "name": "Águas Mornas",
+                        "value": 6743
+                      },
+                      {
+                        "name": "Angelina",
+                        "value": 5358
+                      },
+                      {
+                        "name": "Anitápolis",
+                        "value": 3593
+                      },
+                      {
+                        "name": "Palhoça",
+                        "value": 222598
+                      },
+                      {
+                        "name": "Rancho Queimado",
+                        "value": 3279
+                      },
+                      {
+                        "name": "Santo Amaro da Imperatriz",
+                        "value": 27272
+                      },
+                      {
+                        "name": "São Bonifácio",
+                        "value": 2946
+                      }
+                    ]
+                  },
+                  {
+                    "name": "NR São José",
+                    "children": [
+                      {
+                        "name": "Antônio Carlos",
+                        "value": 11224
+                      },
+                      {
+                        "name": "Biguaçu",
+                        "value": 76773
+                      },
+                      {
+                        "name": "Governador Celso Ramos",
+                        "value": 16915
+                      },
+                      {
+                        "name": "São José",
+                        "value": 270299
+                      },
+                      {
+                        "name": "São Pedro de Alcântara",
+                        "value": 5776
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          } ;
+
+        // Set the dimensions
+        const width = 900;
+        const radius = width / 6;
+
+        // Create the color scale
+        const color = d3.scaleOrdinal(d3.quantize(d3.interpolateRainbow, data.children.length + 1));
+
+        // Compute the layout
+        const root = d3.hierarchy(data)
+            .sum(d => d.value)
+            .sort((a, b) => b.value - a.value);
+
+        d3.partition()
+            .size([2 * Math.PI, root.height + 1])(root);
+
+        root.each(d => d.current = d);
+
+        // Create the SVG container
+        const svg = d3.select("#chart")
+            .attr("viewBox", [-width / 2, -width / 2, width, width])
+            .style("font", "10px sans-serif");
+
+        // Create the arc generator
+        const arc = d3.arc()
+            .startAngle(d => d.x0)
+            .endAngle(d => d.x1)
+            .padAngle(d => Math.min((d.x1 - d.x0) / 2, 0.005))
+            .padRadius(radius * 1.5)
+            .innerRadius(d => d.y0 * radius)
+            .outerRadius(d => Math.max(d.y0 * radius, d.y1 * radius - 1));
+
+        // Append the arcs
+        const path = svg.append("g")
+            .selectAll("path")
+            .data(root.descendants().slice(1))
+            .join("path")
+                .attr("fill", d => { while (d.depth > 1) d = d.parent; return color(d.data.name); })
+                .attr("fill-opacity", d => arcVisible(d.current) ? (d.children ? 0.6 : 0.4) : 0)
+                .attr("pointer-events", d => arcVisible(d.current) ? "auto" : "none")
+                .attr("d", d => arc(d.current))
+                .on("click", clicked);
+
+        path.append("title")
+            .text(d => `${d.ancestors().map(d => d.data.name).reverse().join("/")}\nPopulation: ${d.value}`);
+
+        // Append labels directly over each segment
+        const label = svg.append("g")
+            .attr("pointer-events", "none")
+            .attr("text-anchor", "middle")
+            .style("user-select", "none")
+            .selectAll("text")
+            .data(root.descendants().slice(1))
+            .join("text")
+                .attr("dy", "0.35em")
+                .attr("fill-opacity", d => +labelVisible(d.current))
+                .attr("transform", d => labelTransform(d.current))
+                .text(d => `${d.data.name} (${d.value})`);
+
+        const parent = svg.append("circle")
+            .datum(root)
+            .attr("r", radius)
+            .attr("fill", "none")
+            .attr("pointer-events", "all")
+            .on("click", clicked);
+
+        function clicked(event, p) {
+            if (!p) p = root; // Zoom out to the root if no segment is clicked
+
+            root.each(d => d.target = {
+                x0: Math.max(0, Math.min(1, (d.x0 - p.x0) / (p.x1 - p.x0))) * 2 * Math.PI,
+                x1: Math.max(0, Math.min(1, (d.x1 - p.x0) / (p.x1 - p.x0))) * 2 * Math.PI,
+                y0: Math.max(0, d.y0 - p.depth),
+                y1: Math.max(0, d.y1 - p.depth)
+            });
+
+            const t = svg.transition().duration(750);
+
+            // Update arcs
+            path.transition(t)
+                .tween("data", d => {
+                    const i = d3.interpolate(d.current, d.target);
+                    return t => d.current = i(t);
+                })
+                .filter(function(d) {
+                    return +this.getAttribute("fill-opacity") || arcVisible(d.target);
+                })
+                    .attr("fill-opacity", d => arcVisible(d.target) ? (d.children ? 0.6 : 0.4) : 0)
+                    .attr("pointer-events", d => arcVisible(d.target) ? "auto" : "none")
+                    .attrTween("d", d => () => arc(d.current));
+
+            // Update labels
+            label.transition(t)
+                .attr("fill-opacity", d => +labelVisible(d.target))
+                .attrTween("transform", d => () => labelTransform(d.current));
+        }
+
+        function arcVisible(d) {
+            return d.y1 <= 3 && d.y0 >= 1 && d.x1 > d.x0;
+        }
+
+        function labelVisible(d) {
+            return d.y1 <= 3 && d.y0 >= 1 && (d.y1 - d.y0) * (d.x1 - d.x0) > 0.03;
+        }
+
+        function labelTransform(d) {
+            const x = (d.x0 + d.x1) / 2 * 180 / Math.PI;
+            const y = (d.y0 + d.y1) / 2 * radius;
+            return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
+        }
+    </script>
+</body>
+</html>
